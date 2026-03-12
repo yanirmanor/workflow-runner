@@ -4,6 +4,21 @@ A desktop app that lets you visually create workflows of npm scripts across mult
 
 ![Electron](https://img.shields.io/badge/Electron-41-blue) ![React](https://img.shields.io/badge/React-19-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue) ![React Flow](https://img.shields.io/badge/React%20Flow-12-purple)
 
+## Download
+
+Pre-built binaries are available on the [Releases](../../releases/latest) page:
+
+| Platform | File |
+|----------|------|
+| macOS | `workflow-runner-darwin-*.zip` |
+| Windows | `workflow-runner-*-setup.exe` |
+| Linux (Debian) | `workflow-runner_*_amd64.deb` |
+| Linux (RPM) | `workflow-runner-*.rpm` |
+
+Download the file for your platform, extract/install, and run.
+
+> No release yet? See [Build from Source](#build-from-source) below.
+
 ## Features
 
 - **Folder Scanner** - Select a root folder and auto-discover all projects with `package.json`
@@ -11,33 +26,42 @@ A desktop app that lets you visually create workflows of npm scripts across mult
 - **Script Selection** - Check which npm scripts to run per project node
 - **Workflow Execution** - Connected nodes run sequentially (topological order), unconnected nodes run in parallel
 - **Per-Node Controls** - Play/Stop individual nodes independently
-- **Port Detection** - Auto-detects when a dev server starts listening on a port and shows a toast notification
+- **Port Detection** - Auto-detects when a dev server starts listening on a port, shows a toast notification and a persistent port badge on the node
+- **Error Notifications** - Red toast with stderr context when scripts fail or crash
 - **Process Cleanup** - Stop button kills entire process trees and cleans up ports (`lsof`-based)
 - **ANSI Colors** - Console output renders terminal colors (bold, red, green, etc.)
 - **Resizable Panels** - Drag to resize sidebar width, sidebar sections split, console height, and individual nodes
 - **Workflow Persistence** - Workflows saved as JSON in `~/.workflow-runner/`
 - **Cycle Detection** - Warns if edges form a cycle before running
 
-## Tech Stack
+## Build from Source
 
-- **Electron** + **Electron Forge** + **Vite** - Desktop shell and build tooling
-- **React 19** + **TypeScript 5.5** - Renderer
-- **React Flow v12** (`@xyflow/react`) - Workflow canvas
-- **TailwindCSS 3** - Styling
-- **lucide-react** - Icons
+### Prerequisites
 
-## Getting Started
+- [Node.js](https://nodejs.org/) 18+
+- [Bun](https://bun.sh/) (recommended) or npm
+
+### Steps
 
 ```bash
-# Install dependencies
-npm install
-
-# Run in development
-npm start
-
-# Package for distribution
-npm run make
+git clone https://github.com/yanirmanor/workflow-runner.git
+cd workflow-runner
+bun install
 ```
+
+**Run in development:**
+
+```bash
+bun start
+```
+
+**Build distributable packages:**
+
+```bash
+bun run make
+```
+
+Built artifacts will be in the `out/make/` directory.
 
 ## How It Works
 
@@ -56,6 +80,14 @@ npm run make
 - Within a node, selected scripts run **sequentially**
 - On failure: the workflow stops
 
+## Tech Stack
+
+- **Electron** + **Electron Forge** + **Vite** - Desktop shell and build tooling
+- **React 19** + **TypeScript 5.5** - Renderer
+- **React Flow v12** (`@xyflow/react`) - Workflow canvas
+- **Tailwind CSS 4** - Styling
+- **lucide-react** - Icons
+
 ## Project Structure
 
 ```
@@ -73,7 +105,7 @@ src/
       Sidebar/      Folder picker, project list, workflow list
       Toolbar/      Save, Run, Stop, Console toggle
       Console/      Log output with ANSI color rendering
-      Notifications/ Port detection toasts
+      Notifications/ Port toasts + Error toasts
     hooks/          useProjects, useWorkflows, useExecution, useResizable
     lib/            Topological sort, ANSI parser
     types/          TypeScript interfaces
