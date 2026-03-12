@@ -1,10 +1,12 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 export interface ScannedProject {
   projectPath: string;
   projectName: string;
   scripts: Record<string, string>;
+  gitBranch: string | null;
 }
 
 export function scanFolder(folderPath: string): ScannedProject[] {
@@ -27,10 +29,22 @@ export function scanFolder(folderPath: string): ScannedProject[] {
 
     try {
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      let gitBranch: string | null = null;
+      try {
+        gitBranch = execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], {
+          cwd: childDir,
+          encoding: 'utf-8',
+          timeout: 3000,
+        }).trim();
+      } catch {
+        // not a git repo or git not available
+      }
+
       projects.push({
         projectPath: childDir,
         projectName: pkg.name || entry.name,
         scripts: pkg.scripts || {},
+        gitBranch,
       });
     } catch {
       // skip malformed package.json

@@ -5,6 +5,7 @@ import { WorkflowCanvas } from './components/Canvas/WorkflowCanvas';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { ConsolePanel } from './components/Console/ConsolePanel';
 import { PortToast } from './components/Notifications/PortToast';
+import { ErrorToast } from './components/Notifications/ErrorToast';
 import { useProjects } from './hooks/useProjects';
 import { useWorkflows } from './hooks/useWorkflows';
 import { useExecution } from './hooks/useExecution';
@@ -16,7 +17,7 @@ export default function App() {
   const { rootFolder, projects, loading, pickFolder, rescan } = useProjects();
   const { workflows, activeWorkflow, createWorkflow, openWorkflow, saveWorkflow, deleteWorkflow, renameWorkflow } =
     useWorkflows();
-  const { logs, nodeStatuses, running, portNotifications, startWorkflow, stopWorkflow, runNode, clearLogs, dismissPortNotification } = useExecution();
+  const { logs, nodeStatuses, running, portNotifications, nodePorts, errorNotifications, startWorkflow, stopWorkflow, runNode, clearLogs, dismissPortNotification, dismissErrorNotification } = useExecution();
 
   const sidebar = useResizable({ direction: 'horizontal', initialSize: 260, minSize: 180, maxSize: 500 });
   const console_ = useResizable({ direction: 'vertical', initialSize: 200, minSize: 80, maxSize: 600, reverse: true });
@@ -138,12 +139,15 @@ export default function App() {
     []
   );
 
-  // Merge execution statuses into nodes
+  // Merge execution statuses and fresh git branch info into nodes
+  const projectBranchMap = new Map(projects.map((p) => [p.projectPath, p.gitBranch]));
   const nodesWithStatus = nodes.map((node) => ({
     ...node,
     data: {
       ...node.data,
       status: nodeStatuses.get(node.id) || node.data.status,
+      gitBranch: projectBranchMap.get(node.data.projectPath) ?? node.data.gitBranch ?? null,
+      ports: nodePorts.get(node.id) ?? [],
     },
   }));
 
@@ -179,6 +183,7 @@ export default function App() {
           />
           <div className="flex-1 relative min-h-0">
             <PortToast notifications={portNotifications} nodes={nodes} onDismiss={dismissPortNotification} />
+            <ErrorToast notifications={errorNotifications} nodes={nodes} onDismiss={dismissErrorNotification} />
             {activeWorkflow ? (
               <WorkflowCanvas
                 nodes={nodesWithStatus}

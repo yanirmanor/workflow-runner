@@ -8,7 +8,7 @@ interface RunningProcess {
 }
 
 // Matches common dev server port output patterns
-const PORT_REGEX = /(?:localhost|127\.0\.0\.1|0\.0\.0\.0|Local:\s*https?:\/\/[^:]+):(\d{3,5})/gi;
+const PORT_REGEX = /(?:localhost|127\.0\.0\.1|0\.0\.0\.0|Local:\s*https?:\/\/[^:]+):(\d{3,5})|(?:port\s+)(\d{3,5})/gi;
 
 function killProcessTree(pid: number) {
   try {
@@ -62,7 +62,7 @@ export class ScriptExecutor {
     let match: RegExpExecArray | null;
     PORT_REGEX.lastIndex = 0;
     while ((match = PORT_REGEX.exec(text)) !== null) {
-      const port = parseInt(match[1], 10);
+      const port = parseInt(match[1] || match[2], 10);
       if (port < 1024 || port > 65535) continue;
 
       if (!this.nodePorts.has(nodeId)) this.nodePorts.set(nodeId, new Set());

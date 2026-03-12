@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Handle, Position, NodeResizeControl } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
-import { Play, Square, Trash2, GripVertical } from 'lucide-react';
+import { Play, Square, Trash2, GripVertical, GitBranch, Globe } from 'lucide-react';
 import type { ProjectNodeData } from '../../types';
 
 const statusColors: Record<ProjectNodeData['status'], string> = {
@@ -108,7 +108,29 @@ function ProjectNodeComponent({ id, data }: NodeProps & { data: ProjectNodeData 
           )}
         </div>
 
-        <div className="px-3 py-1 border-t border-gray-700 shrink-0">
+        <div className="px-3 py-1.5 border-t border-gray-700 shrink-0 space-y-1">
+          {data.ports && data.ports.length > 0 && (
+            <span
+              className="inline-flex items-center gap-1 max-w-full px-1.5 py-0.5 rounded-full bg-green-900/40 text-green-300 text-[10px]"
+              title={data.ports.map((p) => `:${p}`).join(', ')}
+            >
+              <Globe size={10} className="shrink-0" />
+              <span className="truncate">
+                {data.ports.length <= 3
+                  ? data.ports.map((p) => `:${p}`).join(', ')
+                  : `${data.ports.slice(0, 2).map((p) => `:${p}`).join(', ')} +${data.ports.length - 2}`}
+              </span>
+            </span>
+          )}
+          {data.gitBranch && (
+            <span
+              className="inline-flex items-center gap-1 max-w-full px-1.5 py-0.5 rounded-full bg-purple-900/40 text-purple-300 text-[10px]"
+              title={data.gitBranch}
+            >
+              <GitBranch size={10} className="shrink-0" />
+              <span className="truncate">{data.gitBranch}</span>
+            </span>
+          )}
           <p className="text-[10px] text-gray-500 truncate" title={data.projectPath}>
             {data.projectPath}
           </p>

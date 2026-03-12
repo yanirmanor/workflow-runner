@@ -4,11 +4,13 @@ export interface ProjectInfo {
   projectPath: string;
   projectName: string;
   scripts: Record<string, string>;
+  gitBranch: string | null;
 }
 
 export interface ProjectNodeData extends ProjectInfo {
   selectedScripts: string[];
   status: 'idle' | 'running' | 'success' | 'error';
+  ports?: number[];
   [key: string]: unknown;
 }
 

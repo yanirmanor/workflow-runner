@@ -1,0 +1,13 @@
+diff --git a/node_modules/@electron-forge/plugin-vite/dist/config/vite.base.config.js b/node_modules/@electron-forge/plugin-vite/dist/config/vite.base.config.js
+index 1234567..abcdefg 100644
+--- a/node_modules/@electron-forge/plugin-vite/dist/config/vite.base.config.js
++++ b/node_modules/@electron-forge/plugin-vite/dist/config/vite.base.config.js
+@@ -85,7 +85,7 @@ function pluginHotRestart(command) {
+             if (command === 'reload') {
+                 for (const server of Object.values(viteDevServers)) {
+                     // Preload scripts hot reload.
+-                    server.ws.send({ type: 'full-reload' });
++                    server.hot.send({ type: 'full-reload' });
+                 }
+             }
+             else if (command === 'restart') {
