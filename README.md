@@ -6,11 +6,11 @@ A desktop app that lets you visually create workflows of npm scripts across mult
 
 ## Download
 
-<a href="https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-darwin-arm64-1.0.0.zip">
-  <img src="https://img.shields.io/badge/Download_app_for-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download for macOS" height="56" />
+<a href="https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-1.0.0-arm64.dmg">
+  <img src="https://img.shields.io/badge/Download_.dmg_for-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download DMG for macOS" height="56" />
 </a>
 
-Or browse all releases on the [Releases](../../releases/latest) page.
+Or grab the [zip](https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-darwin-arm64-1.0.0.zip) instead. Browse all releases on the [Releases](../../releases/latest) page.
 
 ## Features
 
