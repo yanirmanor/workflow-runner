@@ -14,6 +14,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   updateWorkflow: (workflow: unknown) => ipcRenderer.invoke(IPC.WORKFLOW_UPDATE, workflow),
   deleteWorkflow: (id: string) => ipcRenderer.invoke(IPC.WORKFLOW_DELETE, id),
 
+  exportWorkflow: (data: { name: string; nodes: unknown[]; edges: unknown[] }) =>
+    ipcRenderer.invoke(IPC.WORKFLOW_EXPORT, data),
+  importWorkflow: () => ipcRenderer.invoke(IPC.WORKFLOW_IMPORT),
+
   execStart: (workflowId: string) => ipcRenderer.invoke(IPC.EXEC_START, workflowId),
   execStop: (nodeId?: string) => ipcRenderer.invoke(IPC.EXEC_STOP, nodeId),
   execRunNode: (workflowId: string, nodeId: string) =>

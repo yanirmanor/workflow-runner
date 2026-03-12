@@ -15,7 +15,7 @@ import { hasCycle } from './lib/topological-sort';
 
 export default function App() {
   const { rootFolder, projects, loading, pickFolder, rescan } = useProjects();
-  const { workflows, activeWorkflow, createWorkflow, openWorkflow, saveWorkflow, deleteWorkflow, renameWorkflow } =
+  const { workflows, activeWorkflow, createWorkflow, openWorkflow, saveWorkflow, deleteWorkflow, renameWorkflow, exportWorkflow, importWorkflow } =
     useWorkflows();
   const { logs, nodeStatuses, running, portNotifications, nodePorts, errorNotifications, startWorkflow, stopWorkflow, runNode, clearLogs, dismissPortNotification, dismissErrorNotification } = useExecution();
 
@@ -55,6 +55,18 @@ export default function App() {
     },
     [nodes]
   );
+
+  const handleExport = useCallback(async () => {
+    if (!activeWorkflow) return;
+    await exportWorkflow(activeWorkflow.name, nodes, edges);
+  }, [activeWorkflow, exportWorkflow, nodes, edges]);
+
+  const handleImport = useCallback(async () => {
+    const warnings = await importWorkflow();
+    if (warnings && warnings.length > 0) {
+      alert('Import warnings:\n\n' + warnings.join('\n'));
+    }
+  }, [importWorkflow]);
 
   const handleSave = useCallback(async () => {
     await saveWorkflow(nodes, edges);
@@ -169,12 +181,14 @@ export default function App() {
           onOpenWorkflow={handleOpenWorkflow}
           onDeleteWorkflow={deleteWorkflow}
           onRenameWorkflow={renameWorkflow}
+          onImportWorkflow={handleImport}
         />
         <div className="flex-1 flex flex-col min-w-0">
           <Toolbar
             activeWorkflow={activeWorkflow}
             running={running}
             cycleWarning={cycleWarning}
+            onExport={handleExport}
             onSave={handleSave}
             onRun={handleRun}
             onStop={stopWorkflow}

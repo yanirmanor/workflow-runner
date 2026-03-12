@@ -44,6 +44,11 @@ export interface ElectronAPI {
   updateWorkflow: (workflow: Workflow) => Promise<Workflow>;
   deleteWorkflow: (id: string) => Promise<void>;
 
+  exportWorkflow: (data: { name: string; nodes: unknown[]; edges: unknown[] }) =>
+    Promise<{ success: boolean; filePath?: string }>;
+  importWorkflow: () =>
+    Promise<{ workflow: Workflow; warnings: string[] } | null>;
+
   execStart: (workflowId: string) => Promise<void>;
   execStop: (nodeId?: string) => Promise<void>;
   execRunNode: (workflowId: string, nodeId: string) => Promise<void>;

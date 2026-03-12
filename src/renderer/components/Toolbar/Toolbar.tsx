@@ -1,10 +1,11 @@
-import { Play, Square, Save, Terminal, AlertTriangle } from 'lucide-react';
+import { Play, Square, Save, Download, Terminal, AlertTriangle } from 'lucide-react';
 import type { Workflow } from '../../types';
 
 interface ToolbarProps {
   activeWorkflow: Workflow | null;
   running: boolean;
   cycleWarning: boolean;
+  onExport: () => void;
   onSave: () => void;
   onRun: () => void;
   onStop: () => void;
@@ -16,6 +17,7 @@ export function Toolbar({
   activeWorkflow,
   running,
   cycleWarning,
+  onExport,
   onSave,
   onRun,
   onStop,
@@ -45,6 +47,16 @@ export function Toolbar({
       >
         <Save size={14} />
         Save
+      </button>
+
+      <button
+        onClick={onExport}
+        disabled={!activeWorkflow}
+        className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 disabled:opacity-40 rounded transition-colors"
+        title="Export workflow"
+      >
+        <Download size={14} />
+        Export
       </button>
 
       {running ? (

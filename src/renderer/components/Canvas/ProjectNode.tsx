@@ -28,17 +28,21 @@ function ProjectNodeComponent({ id, data }: NodeProps & { data: ProjectNodeData 
     window.dispatchEvent(event);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const event = new CustomEvent('workflow:deleteNode', { detail: { nodeId: id } });
     window.dispatchEvent(event);
   };
 
-  const handleRunNode = () => {
+  const handleRunNode = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const event = new CustomEvent('workflow:runNode', { detail: { nodeId: id } });
     window.dispatchEvent(event);
   };
 
-  const handleStopNode = () => {
+  const handleStopNode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     const event = new CustomEvent('workflow:stopNode', { detail: { nodeId: id } });
     window.dispatchEvent(event);
   };
@@ -70,7 +74,7 @@ function ProjectNodeComponent({ id, data }: NodeProps & { data: ProjectNodeData 
         <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-700 shrink-0">
           <div className={`w-2 h-2 rounded-full ${dotColor}`} />
           <span className="text-sm font-semibold text-gray-100 truncate flex-1">{data.projectName}</span>
-          <div className="flex items-center gap-0.5 nodrag">
+          <div className="flex items-center gap-0.5 nodrag nopan">
             {data.status === 'running' ? (
               <button onClick={handleStopNode} className="p-0.5 text-red-400 hover:text-red-300" title="Stop">
                 <Square size={12} />

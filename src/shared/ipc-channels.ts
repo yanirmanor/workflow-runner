@@ -9,6 +9,8 @@ export const IPC = {
   WORKFLOW_CREATE: 'workflow:create',
   WORKFLOW_UPDATE: 'workflow:update',
   WORKFLOW_DELETE: 'workflow:delete',
+  WORKFLOW_EXPORT: 'workflow:export',
+  WORKFLOW_IMPORT: 'workflow:import',
 
   EXEC_START: 'exec:start',
   EXEC_STOP: 'exec:stop',

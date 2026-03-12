@@ -40,6 +40,7 @@ function killPort(port: number) {
 export class ScriptExecutor {
   private processes: Map<string, RunningProcess[]> = new Map();
   private nodePorts: Map<string, Set<number>> = new Map();
+  private stoppedNodes: Set<string> = new Set();
   private aborted = false;
 
   constructor(private window: BrowserWindow) {}
@@ -87,8 +88,10 @@ export class ScriptExecutor {
     this.setNodeStatus(nodeId, 'running');
 
     for (const script of scripts) {
-      if (this.aborted) {
-        this.setNodeStatus(nodeId, 'error');
+      if (this.aborted || this.stoppedNodes.has(nodeId)) {
+        if (!this.stoppedNodes.has(nodeId)) {
+          this.setNodeStatus(nodeId, 'error');
+        }
         return false;
       }
 
@@ -134,7 +137,7 @@ export class ScriptExecutor {
       });
 
       if (!success) {
-        if (!this.aborted) {
+        if (!this.aborted && !this.stoppedNodes.has(nodeId)) {
           this.setNodeStatus(nodeId, 'error');
         }
         return false;
@@ -180,6 +183,7 @@ export class ScriptExecutor {
   }
 
   stopNode(nodeId: string) {
+    this.stoppedNodes.add(nodeId);
     const procs = this.processes.get(nodeId);
     if (!procs) return;
     for (const { process: child } of procs) {

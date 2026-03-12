@@ -7,7 +7,16 @@ export function useWorkflows() {
   const [activeWorkflow, setActiveWorkflow] = useState<Workflow | null>(null);
 
   useEffect(() => {
-    window.electronAPI.getAllWorkflows().then(setWorkflows);
+    window.electronAPI.getAllWorkflows().then(async (all) => {
+      if (all.length > 0) {
+        setWorkflows(all);
+        setActiveWorkflow(all[0] as Workflow);
+      } else {
+        const wf = await window.electronAPI.createWorkflow({ name: 'Workflow 1', nodes: [], edges: [] });
+        setWorkflows([wf as Workflow]);
+        setActiveWorkflow(wf as Workflow);
+      }
+    });
   }, []);
 
   const createWorkflow = useCallback(async (name: string) => {
@@ -58,5 +67,21 @@ export function useWorkflows() {
     [workflows, activeWorkflow]
   );
 
-  return { workflows, activeWorkflow, createWorkflow, openWorkflow, saveWorkflow, deleteWorkflow, renameWorkflow };
+  const exportWorkflow = useCallback(
+    async (name: string, wfNodes: unknown[], wfEdges: unknown[]) => {
+      return window.electronAPI.exportWorkflow({ name, nodes: wfNodes, edges: wfEdges });
+    },
+    []
+  );
+
+  const importWorkflow = useCallback(async () => {
+    const result = await window.electronAPI.importWorkflow();
+    if (!result) return null;
+    const wf = result.workflow as Workflow;
+    setWorkflows((prev) => [...prev, wf]);
+    setActiveWorkflow(wf);
+    return result.warnings;
+  }, []);
+
+  return { workflows, activeWorkflow, createWorkflow, openWorkflow, saveWorkflow, deleteWorkflow, renameWorkflow, exportWorkflow, importWorkflow };
 }

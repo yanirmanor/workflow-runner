@@ -19,6 +19,7 @@ interface SidebarProps {
   onOpenWorkflow: (id: string) => void;
   onDeleteWorkflow: (id: string) => void;
   onRenameWorkflow: (id: string, name: string) => void;
+  onImportWorkflow: () => void;
 }
 
 export function Sidebar({
@@ -36,6 +37,7 @@ export function Sidebar({
   onOpenWorkflow,
   onDeleteWorkflow,
   onRenameWorkflow,
+  onImportWorkflow,
 }: SidebarProps) {
   const [workflowsHeight, setWorkflowsHeight] = useState(160);
   const dragging = useRef(false);
@@ -94,6 +96,7 @@ export function Sidebar({
             onOpenWorkflow={onOpenWorkflow}
             onDeleteWorkflow={onDeleteWorkflow}
             onRenameWorkflow={onRenameWorkflow}
+            onImportWorkflow={onImportWorkflow}
           />
         </div>
 
