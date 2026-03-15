@@ -11,6 +11,15 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
+    extraResource: ['./dist/workflow'],
+  },
+  hooks: {
+    packageAfterCopy: async () => {
+      const { execFileSync } = require('node:child_process');
+      execFileSync('bun', ['build', 'src/cli/index.ts', '--compile', '--outfile', 'dist/workflow'], {
+        stdio: 'inherit',
+      });
+    },
   },
   rebuildConfig: {},
   makers: [

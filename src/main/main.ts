@@ -1,10 +1,23 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
+import { copyFileSync, chmodSync, existsSync } from 'node:fs';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './ipc-handlers';
 
 if (started) {
   app.quit();
+}
+
+function installCli() {
+  try {
+    const cliBinary = path.join(process.resourcesPath, 'workflow');
+    if (!existsSync(cliBinary)) return;
+    const dest = '/usr/local/bin/workflow';
+    copyFileSync(cliBinary, dest);
+    chmodSync(dest, 0o755);
+  } catch {
+    // /usr/local/bin may not be writable — skip silently
+  }
 }
 
 const createWindow = () => {
@@ -25,7 +38,10 @@ const createWindow = () => {
   }
 };
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  installCli();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
