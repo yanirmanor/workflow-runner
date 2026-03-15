@@ -6,11 +6,21 @@ A desktop app that lets you visually create workflows of npm scripts across mult
 
 ## Download
 
-<a href="https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-1.0.0-arm64.dmg">
+<a href="https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-1.2.0-arm64.dmg">
   <img src="https://img.shields.io/badge/Download_.dmg_for-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download DMG for macOS" height="56" />
 </a>
 
-Or grab the [zip](https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-darwin-arm64-1.0.0.zip) instead. Browse all releases on the [Releases](../../releases/latest) page.
+Or grab the [zip](https://github.com/yanirmanor/workflow-runner/releases/latest/download/workflow-runner-darwin-arm64-1.2.0.zip) instead. Browse all releases on the [Releases](../../releases/latest) page.
+
+### macOS: "App is damaged and can't be opened"
+
+Because the app is not code-signed, macOS Gatekeeper quarantines it when downloaded from the internet. To fix this, open Terminal and run:
+
+```bash
+xattr -cr /Applications/workflow-runner.app
+```
+
+Adjust the path if you placed the app elsewhere. After running this command, the app will open normally.
 
 ## Features
 
@@ -111,51 +121,6 @@ bun run cli:dev -- list    # Run directly without compiling
 - Stage 2+: once a stage completes, nodes whose dependencies are satisfied run in **parallel**
 - Within a node, selected scripts run **sequentially**
 - On failure: the workflow stops
-
-## Tech Stack
-
-- **Electron** + **Electron Forge** + **Vite** - Desktop shell and build tooling
-- **React 19** + **TypeScript 5.5** - Renderer
-- **React Flow v12** (`@xyflow/react`) - Workflow canvas
-- **Tailwind CSS 4** - Styling
-- **lucide-react** - Icons
-
-## Project Structure
-
-```
-src/
-  shared/         # Shared modules (no Electron dependency)
-    ipc-channels.ts  IPC channel constants
-    storage.ts       Parameterized JSON storage factory
-    topological-sort.ts  Kahn's algorithm for execution ordering
-    execution-engine.ts  EventEmitter-based script executor
-  main/           # Electron main process
-    main.ts         Entry point
-    ipc-handlers.ts IPC handler registrations
-    storage.ts      Thin wrapper using electron app.getPath
-    folder-scanner.ts  Scans for package.json projects
-    script-executor.ts Adapter bridging engine events to BrowserWindow
-  cli/            # CLI (standalone, no Electron)
-    index.ts        Entry point and command routing
-    commands/
-      list.ts       List saved workflows
-      view.ts       Show workflow details and execution plan
-      run.ts        Run a workflow with live colored output
-    ui/
-      format.ts     ANSI colors and table formatting
-      select.ts     Interactive workflow picker
-  preload/        # contextBridge IPC exposure
-  renderer/       # React app
-    components/
-      Canvas/       React Flow canvas + ProjectNode
-      Sidebar/      Folder picker, project list, workflow list
-      Toolbar/      Save, Run, Stop, Console toggle
-      Console/      Log output with ANSI color rendering
-      Notifications/ Port toasts + Error toasts
-    hooks/          useProjects, useWorkflows, useExecution, useResizable
-    lib/            ANSI parser
-    types/          TypeScript interfaces
-```
 
 ## License
 

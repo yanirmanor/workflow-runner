@@ -2,6 +2,23 @@ import { spawn, ChildProcess, execFileSync } from 'node:child_process';
 import { EventEmitter } from 'node:events';
 import type { StageEntry } from './topological-sort';
 
+function getShellEnv(): NodeJS.ProcessEnv {
+  if (process.platform !== 'darwin') return process.env;
+  try {
+    const shell = process.env.SHELL || '/bin/zsh';
+    const path = execFileSync(shell, ['-ilc', 'echo $PATH'], {
+      encoding: 'utf-8',
+      timeout: 5000,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return { ...process.env, PATH: path };
+  } catch {
+    return process.env;
+  }
+}
+
+const shellEnv = getShellEnv();
+
 const PORT_REGEX = /(?:localhost|127\.0\.0\.1|0\.0\.0\.0|Local:\s*https?:\/\/[^:]+):(\d{3,5})|(?:port\s+)(\d{3,5})/gi;
 
 export function killProcessTree(pid: number) {
@@ -93,7 +110,7 @@ export class ExecutionEngine extends EventEmitter {
           cwd: projectPath,
           shell: true,
           detached: true,
-          env: { ...process.env, FORCE_COLOR: '1' },
+          env: { ...shellEnv, FORCE_COLOR: '1' },
           stdio: ['ignore', 'pipe', 'pipe'],
         });
 
