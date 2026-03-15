@@ -56,6 +56,45 @@ bun run make
 
 Built artifacts will be in the `out/make/` directory.
 
+## CLI
+
+Workflow Runner includes a CLI so you can list, view, and run saved workflows directly from the terminal — no Electron app needed.
+
+### Install
+
+The CLI is built and installed globally automatically when you run `bun install`:
+
+```bash
+bun install
+```
+
+This compiles a standalone binary and symlinks it to `~/.bun/bin/workflow`.
+
+### Usage
+
+```bash
+workflow list              # List all saved workflows
+workflow view [name]       # Show workflow details and execution plan
+workflow run [name]        # Run a workflow with live colored output
+workflow help              # Show help
+```
+
+If no name is given to `view` or `run`, an interactive picker is shown.
+
+### Run output
+
+- Each node's output is prefixed with `[projectName]` in a distinct color
+- Stage progress is displayed (`Stage 1/3`)
+- Detected ports are shown inline
+- `Ctrl+C` gracefully stops all running processes and cleans up ports
+
+### Build the CLI manually
+
+```bash
+bun run cli:build          # Compile to dist/workflow and symlink globally
+bun run cli:dev -- list    # Run directly without compiling
+```
+
 ## How It Works
 
 1. Click the folder picker and select a directory containing project subfolders
@@ -85,12 +124,26 @@ Built artifacts will be in the `out/make/` directory.
 
 ```
 src/
+  shared/         # Shared modules (no Electron dependency)
+    ipc-channels.ts  IPC channel constants
+    storage.ts       Parameterized JSON storage factory
+    topological-sort.ts  Kahn's algorithm for execution ordering
+    execution-engine.ts  EventEmitter-based script executor
   main/           # Electron main process
     main.ts         Entry point
     ipc-handlers.ts IPC handler registrations
-    storage.ts      JSON persistence (~/.workflow-runner/)
+    storage.ts      Thin wrapper using electron app.getPath
     folder-scanner.ts  Scans for package.json projects
-    script-executor.ts Spawns npm scripts, streams output
+    script-executor.ts Adapter bridging engine events to BrowserWindow
+  cli/            # CLI (standalone, no Electron)
+    index.ts        Entry point and command routing
+    commands/
+      list.ts       List saved workflows
+      view.ts       Show workflow details and execution plan
+      run.ts        Run a workflow with live colored output
+    ui/
+      format.ts     ANSI colors and table formatting
+      select.ts     Interactive workflow picker
   preload/        # contextBridge IPC exposure
   renderer/       # React app
     components/
@@ -100,9 +153,8 @@ src/
       Console/      Log output with ANSI color rendering
       Notifications/ Port toasts + Error toasts
     hooks/          useProjects, useWorkflows, useExecution, useResizable
-    lib/            Topological sort, ANSI parser
+    lib/            ANSI parser
     types/          TypeScript interfaces
-  shared/         # IPC channel constants
 ```
 
 ## License
