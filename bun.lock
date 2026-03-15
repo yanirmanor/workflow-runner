@@ -4,6 +4,7 @@
     "": {
       "name": "workflow-runner",
       "dependencies": {
+        "@clack/prompts": "^1.1.0",
         "@tailwindcss/vite": "^4.0.0",
         "@xyflow/react": "^12.10.1",
         "electron-squirrel-startup": "^1.0.1",
@@ -36,6 +37,10 @@
     },
   },
   "packages": {
+    "@clack/core": ["@clack/core@1.1.0", "", { "dependencies": { "sisteransi": "^1.0.5" } }, "sha512-SVcm4Dqm2ukn64/8Gub2wnlA5nS2iWJyCkdNHcvNHPIeBTGojpdJ+9cZKwLfmqy7irD4N5qLteSilJlE0WLAtA=="],
+
+    "@clack/prompts": ["@clack/prompts@1.1.0", "", { "dependencies": { "@clack/core": "1.1.0", "sisteransi": "^1.0.5" } }, "sha512-pkqbPGtohJAvm4Dphs2M8xE29ggupihHdy1x84HNojZuMtFsHiUlRvqD24tM2+XmI+61LlfNceM3Wr7U5QES5g=="],
+
     "@electron-forge/cli": ["@electron-forge/cli@7.11.1", "", { "dependencies": { "@electron-forge/core": "7.11.1", "@electron-forge/core-utils": "7.11.1", "@electron-forge/shared-types": "7.11.1", "@electron/get": "^3.0.0", "@inquirer/prompts": "^6.0.1", "@listr2/prompt-adapter-inquirer": "^2.0.22", "chalk": "^4.0.0", "commander": "^11.1.0", "debug": "^4.3.1", "fs-extra": "^10.0.0", "listr2": "^7.0.2", "log-symbols": "^4.0.0", "semver": "^7.2.1" }, "bin": { "electron-forge": "dist/electron-forge.js", "electron-forge-vscode-nix": "script/vscode.sh", "electron-forge-vscode-win": "script/vscode.cmd" } }, "sha512-pk8AoLsr7t7LBAt0cFD06XFA6uxtPdvtLx06xeal7O9o7GHGCbj29WGwFoJ8Br/ENM0Ho868S3PrAn1PtBXt5g=="],
 
     "@electron-forge/core": ["@electron-forge/core@7.11.1", "", { "dependencies": { "@electron-forge/core-utils": "7.11.1", "@electron-forge/maker-base": "7.11.1", "@electron-forge/plugin-base": "7.11.1", "@electron-forge/publisher-base": "7.11.1", "@electron-forge/shared-types": "7.11.1", "@electron-forge/template-base": "7.11.1", "@electron-forge/template-vite": "7.11.1", "@electron-forge/template-vite-typescript": "7.11.1", "@electron-forge/template-webpack": "7.11.1", "@electron-forge/template-webpack-typescript": "7.11.1", "@electron-forge/tracer": "7.11.1", "@electron/get": "^3.0.0", "@electron/packager": "^18.3.5", "@electron/rebuild": "^3.7.0", "@malept/cross-spawn-promise": "^2.0.0", "@vscode/sudo-prompt": "^9.3.1", "chalk": "^4.0.0", "debug": "^4.3.1", "fast-glob": "^3.2.7", "filenamify": "^4.1.0", "find-up": "^5.0.0", "fs-extra": "^10.0.0", "global-dirs": "^3.0.0", "got": "^11.8.5", "interpret": "^3.1.1", "jiti": "^2.4.2", "listr2": "^7.0.2", "lodash": "^4.17.20", "log-symbols": "^4.0.0", "node-fetch": "^2.6.7", "rechoir": "^0.8.0", "semver": "^7.2.1", "source-map-support": "^0.5.13", "username": "^5.1.0" } }, "sha512-YtuPLzggPKPabFAD2rOZFE0s7f4KaUTpGRduhSMbZUqpqD1TIPyfoDBpYiZvao3Ht8pyZeOJjbzcC0LpFs9gIQ=="],
@@ -1089,6 +1094,8 @@
     "shebang-regex": ["shebang-regex@3.0.0", "", {}, "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A=="],
 
     "signal-exit": ["signal-exit@3.0.7", "", {}, "sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ=="],
+
+    "sisteransi": ["sisteransi@1.0.5", "", {}, "sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg=="],
 
     "slash": ["slash@2.0.0", "", {}, "sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A=="],
 
