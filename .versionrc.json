@@ -1,6 +1,5 @@
 {
   "bumpFiles": [
-    { "filename": "package.json", "type": "json" },
-    { "filename": "README.md", "updater": "scripts/readme-updater.js" }
+    { "filename": "package.json", "type": "json" }
   ]
 }

@@ -32,8 +32,11 @@ jobs:
           TAG_NAME: ${{ github.ref_name }}
         run: |
           VERSION="${TAG_NAME#v}"
+          # Rename artifacts to version-less names for stable download URLs
+          cp out/make/workflow-runner-${VERSION}-arm64.dmg out/make/workflow-runner-arm64.dmg
+          cp out/make/zip/darwin/arm64/workflow-runner-darwin-arm64-${VERSION}.zip out/make/zip/darwin/arm64/workflow-runner-darwin-arm64.zip
           gh release create "$TAG_NAME" \
             --title "Workflow Runner v${VERSION}" \
             --generate-notes \
-            out/make/*.dmg \
-            out/make/zip/darwin/arm64/*.zip
+            out/make/workflow-runner-arm64.dmg \
+            out/make/zip/darwin/arm64/workflow-runner-darwin-arm64.zip

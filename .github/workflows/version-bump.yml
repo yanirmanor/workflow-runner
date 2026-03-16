@@ -1,4 +1,4 @@
-name: Version Bump
+name: Version Bump & Release
 
 on:
   pull_request:
@@ -12,6 +12,8 @@ jobs:
   version-bump:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.bump.outputs.new_tag }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,7 +32,45 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump version and create tag
-        run: bun run release
+        id: bump
+        run: |
+          bun run release
+          echo "new_tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
 
       - name: Push changes and tags
         run: git push --follow-tags origin main
+
+  release:
+    needs: version-bump
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version-bump.outputs.new_tag }}
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build distributables
+        run: bun run make
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ needs.version-bump.outputs.new_tag }}
+        run: |
+          VERSION="${TAG_NAME#v}"
+          # Rename artifacts to version-less names for stable download URLs
+          cp out/make/workflow-runner-${VERSION}-arm64.dmg out/make/workflow-runner-arm64.dmg
+          cp out/make/zip/darwin/arm64/workflow-runner-darwin-arm64-${VERSION}.zip out/make/zip/darwin/arm64/workflow-runner-darwin-arm64.zip
+          gh release create "$TAG_NAME" \
+            --title "Workflow Runner v${VERSION}" \
+            --generate-notes \
+            out/make/workflow-runner-arm64.dmg \
+            out/make/zip/darwin/arm64/workflow-runner-darwin-arm64.zip
