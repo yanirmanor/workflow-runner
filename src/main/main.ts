@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
-import { copyFileSync, chmodSync, existsSync } from 'node:fs';
+import { chmodSync, existsSync, unlinkSync, symlinkSync } from 'node:fs';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './ipc-handlers';
 
@@ -13,8 +13,10 @@ function installCli() {
     const cliBinary = path.join(process.resourcesPath, 'workflow');
     if (!existsSync(cliBinary)) return;
     const dest = '/usr/local/bin/workflow';
-    copyFileSync(cliBinary, dest);
-    chmodSync(dest, 0o755);
+    // Remove existing file or symlink (including dangling) before creating a new one
+    try { unlinkSync(dest); } catch { /* doesn't exist — ok */ }
+    symlinkSync(cliBinary, dest);
+    chmodSync(cliBinary, 0o755);
   } catch {
     // /usr/local/bin may not be writable — skip silently
   }
