@@ -20,13 +20,21 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
     return scanFolder(folderPath);
   });
 
-  ipcMain.handle(IPC.FOLDER_GET_ROOT, () => {
-    return storage.getSettings().rootFolder;
+  ipcMain.handle(IPC.FOLDER_GET_ROOTS, () => {
+    return storage.getSettings().rootFolders;
   });
 
-  ipcMain.handle(IPC.FOLDER_SET_ROOT, (_event, folderPath: string) => {
+  ipcMain.handle(IPC.FOLDER_ADD_ROOT, (_event, folderPath: string) => {
     const settings = storage.getSettings();
-    settings.rootFolder = folderPath;
+    if (!settings.rootFolders.includes(folderPath)) {
+      settings.rootFolders.push(folderPath);
+      storage.saveSettings(settings);
+    }
+  });
+
+  ipcMain.handle(IPC.FOLDER_REMOVE_ROOT, (_event, folderPath: string) => {
+    const settings = storage.getSettings();
+    settings.rootFolders = settings.rootFolders.filter((f) => f !== folderPath);
     storage.saveSettings(settings);
   });
 

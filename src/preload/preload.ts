@@ -4,8 +4,9 @@ import { IPC } from '../shared/ipc-channels';
 contextBridge.exposeInMainWorld('electronAPI', {
   pickFolder: () => ipcRenderer.invoke(IPC.FOLDER_PICK),
   scanFolder: (folderPath: string) => ipcRenderer.invoke(IPC.FOLDER_SCAN, folderPath),
-  getRootFolder: () => ipcRenderer.invoke(IPC.FOLDER_GET_ROOT),
-  setRootFolder: (folderPath: string) => ipcRenderer.invoke(IPC.FOLDER_SET_ROOT, folderPath),
+  getRootFolders: () => ipcRenderer.invoke(IPC.FOLDER_GET_ROOTS),
+  addRootFolder: (folderPath: string) => ipcRenderer.invoke(IPC.FOLDER_ADD_ROOT, folderPath),
+  removeRootFolder: (folderPath: string) => ipcRenderer.invoke(IPC.FOLDER_REMOVE_ROOT, folderPath),
 
   getAllWorkflows: () => ipcRenderer.invoke(IPC.WORKFLOW_GET_ALL),
   getWorkflow: (id: string) => ipcRenderer.invoke(IPC.WORKFLOW_GET, id),

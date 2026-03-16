@@ -1,8 +1,9 @@
 export const IPC = {
   FOLDER_PICK: 'folder:pick',
   FOLDER_SCAN: 'folder:scan',
-  FOLDER_GET_ROOT: 'folder:getRoot',
-  FOLDER_SET_ROOT: 'folder:setRoot',
+  FOLDER_GET_ROOTS: 'folder:getRoots',
+  FOLDER_ADD_ROOT: 'folder:addRoot',
+  FOLDER_REMOVE_ROOT: 'folder:removeRoot',
 
   WORKFLOW_GET_ALL: 'workflow:getAll',
   WORKFLOW_GET: 'workflow:get',
