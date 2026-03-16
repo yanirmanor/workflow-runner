@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.3.2](https://github.com/yanirmanor/workflow-runner/compare/v1.3.1...v1.3.2) (2026-03-16)
+
+
+### Bug Fixes
+
+* update README download links to v1.3.1 and automate future updates ([#7](https://github.com/yanirmanor/workflow-runner/issues/7)) ([1e29b81](https://github.com/yanirmanor/workflow-runner/commit/1e29b816317275c4989c28fbdda169655ba38aee))
+
 ## [1.3.1](https://github.com/yanirmanor/workflow-runner/compare/v1.3.0...v1.3.1) (2026-03-16)
 
 
