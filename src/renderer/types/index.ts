@@ -35,8 +35,9 @@ export interface LogEntry {
 export interface ElectronAPI {
   pickFolder: () => Promise<string | null>;
   scanFolder: (folderPath: string) => Promise<ProjectInfo[]>;
-  getRootFolder: () => Promise<string | null>;
-  setRootFolder: (folderPath: string) => Promise<void>;
+  getRootFolders: () => Promise<string[]>;
+  addRootFolder: (folderPath: string) => Promise<void>;
+  removeRootFolder: (folderPath: string) => Promise<void>;
 
   getAllWorkflows: () => Promise<Workflow[]>;
   getWorkflow: (id: string) => Promise<Workflow | null>;

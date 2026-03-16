@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 export interface Settings {
-  rootFolder: string | null;
+  rootFolders: string[];
 }
 
 export interface StoredWorkflow {
@@ -42,7 +42,11 @@ export function createStorage(homeDir: string) {
 
   return {
     getSettings(): Settings {
-      return readJSON<Settings>('settings.json', { rootFolder: null });
+      const raw = readJSON<{ rootFolder?: string | null; rootFolders?: string[] }>('settings.json', {});
+      // Migrate from old single rootFolder format
+      if (raw.rootFolders) return { rootFolders: raw.rootFolders };
+      if (raw.rootFolder) return { rootFolders: [raw.rootFolder] };
+      return { rootFolders: [] };
     },
 
     saveSettings(settings: Settings) {

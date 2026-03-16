@@ -2,41 +2,56 @@ import { useState, useEffect, useCallback } from 'react';
 import type { ProjectInfo } from '../types';
 
 export function useProjects() {
-  const [rootFolder, setRootFolder] = useState<string | null>(null);
+  const [rootFolders, setRootFolders] = useState<string[]>([]);
   const [projects, setProjects] = useState<ProjectInfo[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    window.electronAPI.getRootFolder().then((folder) => {
-      if (folder) {
-        setRootFolder(folder);
-        scanProjects(folder);
-      }
-    });
-  }, []);
-
-  const scanProjects = async (folder: string) => {
+  const scanAllFolders = async (folders: string[]) => {
+    if (folders.length === 0) {
+      setProjects([]);
+      return;
+    }
     setLoading(true);
     try {
-      const results = await window.electronAPI.scanFolder(folder);
-      setProjects(results);
+      const results = await Promise.all(folders.map((f) => window.electronAPI.scanFolder(f)));
+      setProjects(results.flat());
     } finally {
       setLoading(false);
     }
   };
 
-  const pickFolder = useCallback(async () => {
-    const folder = await window.electronAPI.pickFolder();
-    if (folder) {
-      setRootFolder(folder);
-      await window.electronAPI.setRootFolder(folder);
-      await scanProjects(folder);
-    }
+  useEffect(() => {
+    window.electronAPI.getRootFolders().then((folders) => {
+      if (folders.length > 0) {
+        setRootFolders(folders);
+        scanAllFolders(folders);
+      }
+    });
   }, []);
 
-  const rescan = useCallback(() => {
-    if (rootFolder) scanProjects(rootFolder);
-  }, [rootFolder]);
+  const addFolder = useCallback(async () => {
+    const folder = await window.electronAPI.pickFolder();
+    if (folder && !rootFolders.includes(folder)) {
+      const updated = [...rootFolders, folder];
+      setRootFolders(updated);
+      await window.electronAPI.addRootFolder(folder);
+      await scanAllFolders(updated);
+    }
+  }, [rootFolders]);
 
-  return { rootFolder, projects, loading, pickFolder, rescan };
+  const removeFolder = useCallback(
+    async (folder: string) => {
+      const updated = rootFolders.filter((f) => f !== folder);
+      setRootFolders(updated);
+      await window.electronAPI.removeRootFolder(folder);
+      await scanAllFolders(updated);
+    },
+    [rootFolders]
+  );
+
+  const rescan = useCallback(() => {
+    scanAllFolders(rootFolders);
+  }, [rootFolders]);
+
+  return { rootFolders, projects, loading, addFolder, removeFolder, rescan };
 }

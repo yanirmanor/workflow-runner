@@ -14,7 +14,7 @@ import type { ProjectNodeType, ProjectInfo } from './types';
 import { hasCycle } from './lib/topological-sort';
 
 export default function App() {
-  const { rootFolder, projects, loading, pickFolder, rescan } = useProjects();
+  const { rootFolders, projects, loading, addFolder, removeFolder, rescan } = useProjects();
   const { workflows, activeWorkflow, createWorkflow, openWorkflow, saveWorkflow, deleteWorkflow, renameWorkflow, exportWorkflow, importWorkflow } =
     useWorkflows();
   const { logs, nodeStatuses, running, portNotifications, nodePorts, errorNotifications, startWorkflow, stopWorkflow, runNode, clearLogs, dismissPortNotification, dismissErrorNotification } = useExecution();
@@ -169,10 +169,11 @@ export default function App() {
         <Sidebar
           width={sidebar.size}
           onResizeHandle={sidebar.onMouseDown}
-          rootFolder={rootFolder}
+          rootFolders={rootFolders}
           projects={projects}
           loading={loading}
-          onPickFolder={pickFolder}
+          onAddFolder={addFolder}
+          onRemoveFolder={removeFolder}
           onRescan={rescan}
           onAddProject={handleAddProject}
           workflows={workflows}

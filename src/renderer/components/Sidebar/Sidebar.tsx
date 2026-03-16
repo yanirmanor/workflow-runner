@@ -7,10 +7,11 @@ import type { ProjectInfo, Workflow } from '../../types';
 interface SidebarProps {
   width: number;
   onResizeHandle: React.MouseEventHandler;
-  rootFolder: string | null;
+  rootFolders: string[];
   projects: ProjectInfo[];
   loading: boolean;
-  onPickFolder: () => void;
+  onAddFolder: () => void;
+  onRemoveFolder: (folder: string) => void;
   onRescan: () => void;
   onAddProject: (project: ProjectInfo) => void;
   workflows: Workflow[];
@@ -25,10 +26,11 @@ interface SidebarProps {
 export function Sidebar({
   width,
   onResizeHandle,
-  rootFolder,
+  rootFolders,
   projects,
   loading,
-  onPickFolder,
+  onAddFolder,
+  onRemoveFolder,
   onRescan,
   onAddProject,
   workflows,
@@ -84,7 +86,7 @@ export function Sidebar({
       <div className="p-3 border-b border-gray-800">
         <h1 className="text-sm font-bold text-gray-200 tracking-wide">Workflow Runner</h1>
       </div>
-      <FolderPicker rootFolder={rootFolder} loading={loading} onPickFolder={onPickFolder} onRescan={onRescan} />
+      <FolderPicker rootFolders={rootFolders} loading={loading} onAddFolder={onAddFolder} onRemoveFolder={onRemoveFolder} onRescan={onRescan} />
 
       <div ref={containerRef} className="flex-1 flex flex-col min-h-0">
         {/* Workflows section */}
