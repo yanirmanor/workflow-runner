@@ -17,7 +17,8 @@
     "postinstall": "patch-package && bun run cli:build",
     "cli:dev": "bun run src/cli/index.ts",
     "cli:build": "bun build src/cli/index.ts --compile --outfile dist/workflow && ln -sf $(pwd)/dist/workflow ~/.bun/bin/workflow",
-    "workflow": "bun run src/cli/index.ts"
+    "workflow": "bun run src/cli/index.ts",
+    "release": "commit-and-tag-version"
   },
   "keywords": [],
   "author": {
@@ -42,6 +43,7 @@
     "@types/electron-squirrel-startup": "^1.0.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "commit-and-tag-version": "^12.6.1",
     "electron": "41.0.0",
     "oxfmt": "latest",
     "oxlint": "latest",
